@@ -28,9 +28,5 @@ app.post("/", (req, res) => {
     res.redirect(302, "/")
 })
 
-app.get("/kokos/:x/kokos", (req, res) => {
-    res.send(req.params.x)
-})
-
 app.listen(8080, "0.0.0.0") 
 console.log("listeing on http://localhost:8080")
