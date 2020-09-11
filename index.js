@@ -9,6 +9,7 @@ const messages = []
 
 app.get("/", (req, res) => {
     res.send(`
+    <h1>Zatiaľ napíš čo sťeš</h1>
     <form method="post">
         <input name="message"/>
         <input type="submit"/>
