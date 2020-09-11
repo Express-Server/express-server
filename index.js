@@ -26,13 +26,6 @@ app.post("/", (req, res) => {
 
     messages.push(req.body.message)
     res.redirect(302, "/")
-
-    // res.send(`
-    // message "${req.body.message}" was sent
-    // <br/> 
-    // <a href="/" >send new message!</a>
-    // `)
-
 })
 
 app.get("/kokos/:x/kokos", (req, res) => {
