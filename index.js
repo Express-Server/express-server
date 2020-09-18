@@ -16,7 +16,11 @@ app.get("/", (req, res) => {
         <input type="submit"/>
         <ul>
             ${messages
-                .map(message => `<li>${message}</li>`)
+                .map(message => `<li>${
+                    message
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                    }</li>`)
                 .join("")}
         </ul>
     </form>
