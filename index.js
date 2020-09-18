@@ -7,6 +7,12 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 const messages = []
 
+app.get("/delete/:messageId", (req, res) => {
+
+    console.log("deleting message", req.params.messageId)
+    messages.splice(req.params.messageId, 1)
+    res.redirect(302, "/")
+}) 
 app.get("/", (req, res) => {
     res.send(`
     <h1>Zatiaľ napíš čo sťeš</h1>
@@ -16,11 +22,11 @@ app.get("/", (req, res) => {
         <input type="submit"/>
         <ul>
             ${messages
-                .map(message => `<li>${
+                .map((message, index) => `<li>${
                     message
                         .replace(/</g, "&lt;")
                         .replace(/>/g, "&gt;")
-                    }</li>`)
+                    } <a href="/delete/${index}">zmaz!</a></li>`)
                 .join("")}
         </ul>
     </form>
