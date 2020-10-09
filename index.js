@@ -31,43 +31,43 @@ app.get("/cesta", (req, res) => {
     res.send(`<pre>${JSON.stringify(req.headers, null, 2)}</pre>`)
 })
 
-const PASSWORD_ERROR_MESSAGE = `
-    <div style="color: red">
-        Passwords don't match!
-    </div>
-`
-const USER_ERROR_MESSAGE = `
-    <div style="color: red">
-        This username already exists!
-    </div>
-`
+const PASSWORD_MISSMATCH_MESSAGE = "Passwords don't match!"
+const PASSWORD_TOO_SHORT_MESSAGE = "Password is too short! Must be 8 or more characters."
+const USER_EXISTS_ERROR_MESSAGE = "This username already exists!"
 
-const renderLoginForm = (passwordError, user) => `
+const renderLoginForm = (errors = []) => `
 <h1>Sign Up</h1>
 <form method="post" style="display: flex; flex-direction: column" >
     <input type="text" placeholder="Username" name="username" />
     <input type="password" placeholder="Password" name="password" />
     <input type="password" placeholder="Repeat password" name="passwordCheck" />
     <input type="submit" value="Create acount!" />
-    ${passwordError ? PASSWORD_ERROR_MESSAGE : ""}
-    ${user ? USER_ERROR_MESSAGE : ""}
+    <ul style="color: red">
+        ${errors.map(error => `<li>${error}</li>`).join("")}
+    </ul>
 </form>
 `
 
 app.all("/signup", (req, res) => {
-    console.log("dosla poziadavka")
-    let passwordError 
+
     if (req.method === "POST") {
+        const errors = []
         if (req.body.password !== req.body.passwordCheck) {
-            passwordError = true
+            errors.push(PASSWORD_MISSMATCH_MESSAGE)
         }
+        if (req.body.password.length < 8) {
+            errors.push(PASSWORD_TOO_SHORT_MESSAGE)
+        }
+
         knex("users")
             .where({name: req.body.username})
             .first()
             .then(user => {
-                console.log("existing user", user)
-                if (user || passwordError) {
-                    res.send(renderLoginForm(passwordError, user))
+                if (user) {
+                    errors.push(USER_EXISTS_ERROR_MESSAGE)
+                }
+                if (errors.length) {
+                    res.send(renderLoginForm(errors))
                 } else {
                     gensalt(16)
                         .then(salt => {
