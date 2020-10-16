@@ -1,4 +1,8 @@
+const sha256 = require('crypto-js/sha256')
+const gensalt = require('@kdf/salt')
+
 const {knex} = require("./db-connection")
+const {hashPassword} = require("./auth")
 
 const PASSWORD_MISSMATCH_MESSAGE = "Passwords don't match!"
 const PASSWORD_TOO_SHORT_MESSAGE = "Password is too short! Must be 8 or more characters."
@@ -44,11 +48,10 @@ module.exports = (req, res) => {
                                 .insert({
                                     name: req.body.username,
                                     salt: saltString,
-                                    password_hash: sha256(req.body.password + saltString),
+                                    password_hash: hashPassword(req.body.password, saltString),
                                 })
                                 .then(id => res.redirect(302, "/"))
                         })
-                    
                 }
             })
 

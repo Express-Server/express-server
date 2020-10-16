@@ -1,9 +1,9 @@
 const express = require("express")
+const expressSession = require("express-session")
 const bodyParser = require("body-parser")
-const gensalt = require('@kdf/salt')
-const sha256 = require('crypto-js/sha256')
 
 const signup = require("./signup")
+const login = require("./login")
 const {knex} = require("./db-connection")
 
 const saveMessage = (userId, message) =>
@@ -16,10 +16,17 @@ const saveMessage = (userId, message) =>
 const app = express()
 
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(expressSession({
+    secret: "cotirube",
+}))
 
 app.all("/signup", signup)
+app.get("/login", login.loginFormRender)
+app.post("/login", login.loginFormSubmit)
+app.get("/logout", login.renderLogout)
 
-app.get("/", (req, res) => {
+const renderMessages = (req, res) => {
+    console.log("session", req.session)
     knex("messages")
         .join("users", "messages.user_id", "=", "users.id")
         .orderBy('timestamp', 'desc')
@@ -38,12 +45,25 @@ app.get("/", (req, res) => {
                     </ul>
                 </form>
                 `))
+}
+
+app.get("/", (req, res) => {
+    if (req.session.user) {
+        res.send(`
+            <h1>${req.session.user.name} Vitaj!</h1>
+            <a href="/logout" >odhlas sa</a>
+        `)
+    } else {
+        res.send(`
+            <h1>Nazdar neni si prihlaseny!/prihlasena!</h1>
+            <a href="/login" >Prihlas sa</a>
+            <div>alebo sa</div>
+            <a href="/signup">zaregistruj</a>.
+        `)
+    }
 })
 
-
 app.post("/", (req, res) => {
-    console.log(req.body)
-
     knex("users")
         .where({name: req.body.userName})
         .first()
