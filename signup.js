@@ -40,20 +40,21 @@ module.exports = (req, res) => {
                 if (errors.length) {
                     res.send(renderLoginForm(errors))
                 } else {
-                    gensalt(16)
-                        .then(salt => {
-
-                            const saltString = salt.toString('hex')
-                            knex("users")
-                                .insert({
-                                    name: req.body.username,
-                                    salt: saltString,
-                                    password_hash: hashPassword(req.body.password, saltString),
-                                })
-                                .then(id => res.redirect(302, "/"))
-                        })
+                    return gensalt(16)
                 }
             })
+            .then(salt => {
+                salt.foo.bar
+                const saltString = salt.toString('hex')
+                return knex("users")
+                    .insert({
+                        name: req.body.username,
+                        salt: saltString,
+                        password_hash: hashPassword(req.body.password, saltString),
+                    })
+            })
+            .then(() => res.redirect(302, "/"))
+            .catch(x => res.send(renderLoginForm([x.toString()])))
 
     } else {
         console.log("necakam")
