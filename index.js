@@ -63,6 +63,7 @@ app.get("/", (req, res) => {
     }
 })
 
+
 app.post("/", (req, res) => {
     knex("users")
         .where({name: req.body.userName})
@@ -71,10 +72,8 @@ app.post("/", (req, res) => {
             if (!user) {
                 knex("users")
                     .insert({name: req.body.userName})
-                    .then(id =>
-                        saveMessage(id, req.body.message)
-                            .then(() => res.redirect(302, "/"))
-                    )
+                    .then(id => { saveMessage(id, req.body.message)})
+                    .then(() => { res.redirect(302, "/")})
             } else
                 saveMessage(user.id, req.body.message)
                     .then(() => res.redirect(302, "/"))

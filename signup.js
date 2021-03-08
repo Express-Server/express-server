@@ -44,7 +44,6 @@ module.exports = (req, res) => {
                 }
             })
             .then(salt => {
-                salt.foo.bar
                 const saltString = salt.toString('hex')
                 return knex("users")
                     .insert({
