@@ -20,7 +20,7 @@ const renderLoginForm = (errors = []) => `
     </ul>
 </form>
 `
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
     if (req.method === "POST") {
         const errors = []
         if (req.body.password !== req.body.passwordCheck) {
@@ -30,30 +30,31 @@ module.exports = (req, res) => {
             errors.push(PASSWORD_TOO_SHORT_MESSAGE)
         }
 
-        knex("users")
-            .where({name: req.body.username})
-            .first()
-            .then(user => {
-                if (user) {
-                    errors.push(USER_EXISTS_ERROR_MESSAGE)
-                }
-                if (errors.length) {
-                    res.send(renderLoginForm(errors))
-                } else {
-                    return gensalt(16)
-                }
-            })
-            .then(salt => {
+        try {
+            const user = await knex("users")
+                .where({name: req.body.username})
+                .first()
+
+            if (user) {
+                errors.push(USER_EXISTS_ERROR_MESSAGE)
+            }
+            if (errors.length) {
+                res.send(renderLoginForm(errors))
+            } else {
+                const salt = await gensalt(16)
                 const saltString = salt.toString('hex')
-                return knex("users")
+                await knex("users")
                     .insert({
                         name: req.body.username,
                         salt: saltString,
                         password_hash: hashPassword(req.body.password, saltString),
                     })
-            })
-            .then(() => res.redirect(302, "/"))
-            .catch(x => res.send(renderLoginForm([x.toString()])))
+
+                res.redirect(302, "/")
+            }
+        } catch (e) {
+            res.send(renderLoginForm([x.toString()]))
+        }
 
     } else {
         console.log("necakam")
