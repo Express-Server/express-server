@@ -16,11 +16,12 @@ const loginFormTemplate = (errors = []) => `
 const loginFormRender = (req, res) =>
     res.send(loginFormTemplate())
 
-const loginFormSubmit = (req, res) =>
-    knex("users")
-        .where({name: req.body.username})
-        .first()
-        .then(user => {
+const loginFormSubmit = async (req, res) => {
+
+  
+   const user = await knex("users")
+    .where({name: req.body.username})
+    .first()
             if (user) {
                 const hashedPassword = hashPassword(req.body.password, user.salt)
 
@@ -34,7 +35,8 @@ const loginFormSubmit = (req, res) =>
             } else {
                 res.send(loginFormTemplate(["This username doesn't exist!"]))
             }
-        })
+        
+}
 
 const renderLogout = (req, res) => {
     req.session.user = undefined
