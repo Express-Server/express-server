@@ -27,15 +27,18 @@ app.get("/logout", login.renderLogout)
 
 const renderMessages = (req, res) => {
     console.log("session", req.session)
+    if (req.session.user) {
     knex("messages")
         .join("users", "messages.user_id", "=", "users.id")
         .orderBy('timestamp', 'desc')
         .then(messages =>
             res.send(`
+            <h1>${req.session.user.name} Vitaj!</h1>
+            <a href="/logout" >odhlas sa</a>
                 <h1>Zatiaľ napíš čo sťeš</h1>
                 <h2>Ale nemusíš napísať ňišt</h2>
                 <form method="post">
-                    <input name="userName" placeholder="Meno" />
+                    
                     <input name="message" placeholder="Správa"/>
                     <input type="submit"/>
                     <ul>
@@ -44,29 +47,26 @@ const renderMessages = (req, res) => {
                             .join("")}
                     </ul>
                 </form>
-                `))
+                `))} else {
+                    res.send(`
+                        <h1>Nazdar neni si prihlaseny!/prihlasena!</h1>
+                        <a href="/login" >Prihlas sa</a>
+                        <div>alebo sa</div>
+                        <a href="/signup">zaregistruj</a>.
+                    `)
+                }
+            
 }
 
-app.get("/", (req, res) => {
-    if (req.session.user) {
-        res.send(`
-            <h1>${req.session.user.name} Vitaj!</h1>
-            <a href="/logout" >odhlas sa</a>
-        `)
-    } else {
-        res.send(`
-            <h1>Nazdar neni si prihlaseny!/prihlasena!</h1>
-            <a href="/login" >Prihlas sa</a>
-            <div>alebo sa</div>
-            <a href="/signup">zaregistruj</a>.
-        `)
-    }
-})
+app.get("/", renderMessages)
+
+
+
 
 
 app.post("/", (req, res) => {
     knex("users")
-        .where({name: req.body.userName})
+        .where({name: req.session.user.name})
         .first()
         .then(user => {
             if (!user) {
@@ -79,6 +79,9 @@ app.post("/", (req, res) => {
                     .then(() => res.redirect(302, "/"))
         })
 })
+
+
+
 
 app.listen(8080, "0.0.0.0") 
 console.log("listeing on http://localhost:8080")
