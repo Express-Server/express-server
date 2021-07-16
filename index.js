@@ -1,29 +1,29 @@
-const express = require("express")
-const expressSession = require("express-session")
-const bodyParser = require("body-parser")
+const express = require('express')
+const expressSession = require('express-session')
+const bodyParser = require('body-parser')
 
-const signup = require("./signup")
-const login = require("./login")
-const {knex} = require("./db-connection")
+const signup = require('./signup')
+const login = require('./login')
+const {knex} = require('./db-connection')
 
 const saveMessage = (userId, message) =>
-    knex("messages")
-        .insert({
-            text: message.replace(/</g, "&lt;").replace(/>/g, "&gt;"),
-            user_id: userId,
-        })
+  knex('messages')
+    .insert({
+      text: message.replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+      user_id: userId,
+    })
 
 const app = express()
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(expressSession({
-    secret: "cotirube",
+  secret: 'cotirube',
 }))
 
-app.all("/signup", signup)
-app.get("/login", login.loginFormRender)
-app.post("/login", login.loginFormSubmit)
-app.get("/logout", login.renderLogout)
+app.all('/signup', signup)
+app.get('/login', login.loginFormRender)
+app.post('/login', login.loginFormSubmit)
+app.get('/logout', login.renderLogout)
 
 const renderMessages = (req, res) => {
     console.log("session", req.session)
