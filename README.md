@@ -19,7 +19,7 @@ $ cd Desktop/Express-Server
 
 - If you are running on **Windows**, also use the `cd` command.
 
-Make sure you are on the right disc! \
+But make sure you are on the right disc! \
 If you are on the wrong disc, use `d:` command to switch to the another.
 ### Example:
 ```cmd
