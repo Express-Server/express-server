@@ -3,14 +3,14 @@ It's a simple web application, writen in JavaScript. \
 Still work in progress.
 
 # Set-up
-To get this server to work on your cumputer, you will need to follow the following steps: \
+To get this server to work on your cumputer, you will need to follow the following steps:
 
 ## 1. 
 Fork and clone the project. \
-You can do that eather using **terminal**, or **GitHub Desktop** app. \
+You can do that eather using **terminal**, or **GitHub Desktop** app.
 
 ## 2.
-Locate the repository folder on your computer. \
+Locate the repository folder on your computer.
 - If you are running **Linux/Mac**, do that using the `cd` command.
 ### Example:
 ```cmd
@@ -27,7 +27,6 @@ $ cd Desktop/Express-Server
 
 $ d:
 ```
-***
 ## 3.
 Start the application, Using `npm start` command.
 ### Example:
