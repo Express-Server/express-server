@@ -2,7 +2,7 @@
 It's a simple web application, writen in JavaScript. \
 Still work in progress.
 
-# Setup
+# Set-up
 To get this server to work on your cumputer, you will need to follow the following steps: \
 
 ## 1. 
