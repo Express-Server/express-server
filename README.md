@@ -28,9 +28,23 @@ $ cd Desktop/Express-Server
 $ d:
 ```
 ## 3.
+Create development database, using `nmp run db`.
+That will create an [Sqlite] database file `./dev-db.sqlite3` with three users:
+`testuser`, `cotirubex` and `chrachel`. The passwords are the same as the user names.
+
+You need to have [Sqlite] installed on your computer!
+### Example:
+```cmd
+$ nmp run db
+```
+
+## 4.
 Start the application, Using `npm start` command.
 ### Example:
 ```cmd
 $ nmp start
 ```
 And you are good to go!
+
+
+[Sqlite]: https://www.sqlite.org/index.html
