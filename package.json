@@ -7,7 +7,10 @@
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "db": "npm run db:create-empty && npm run db:add-users",
+    "db:create-empty": "sqlite3 dev-db.sqlite3 < db/schema.sql",
+    "db:add-users": "sqlite3 dev-db.sqlite3 < db/dummy_users.sql"
   },
   "author": "",
   "license": "ISC",
